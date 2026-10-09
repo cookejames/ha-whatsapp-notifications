@@ -1,7 +1,7 @@
 ---
 id: T08
 title: Integration scaffold, API client, config flow
-status: review
+status: done
 depends_on: [T01]
 wave: 2
 ---
