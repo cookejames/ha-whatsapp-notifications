@@ -1,0 +1,13 @@
+title = "ha-whatsapp-notifications gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Documented placeholder values (docs/spec.md §1)"
+regexes = [
+  '''test-api-key-0123456789abcdef''',
+  '''1555555012[34]''',
+  '''12036300000000000[01]@g\.us''',
+  '''100000000000000@lid''',
+]
