@@ -18,7 +18,7 @@ Read the relevant spec sections and your ticket before writing code. When the sp
 - **Language:** TypeScript everywhere except `custom_components/whatsapp/` and `tests/`. HA requires Python there, so keep that layer thin. Scripts and tooling are TypeScript or POSIX shell.
 - **Public repo hygiene:** never commit personal data (names, phone numbers, JIDs/LIDs, group names, real hostnames or IPs, emails, secrets). Use only the placeholders in `docs/spec.md` §1.
 - **Logging:** never log API keys, auth headers or message bodies. Mask recipients with `maskJid`.
-- **Security posture:** the add-on has no host ports. A source-IP allowlist runs before bearer auth. Don't weaken either.
+- **Security posture:** the add-on has no host ports. A source-IP allowlist runs before bearer auth. Don't weaken either. The allowlist cannot distinguish HA Core from host-network add-ons (they share `172.30.32.1`), so the bearer key is the real boundary for those; don't document it as stronger than that.
 - **Baileys** is pinned to an exact version. Bumps are deliberate and recorded in the CHANGELOG.
 - **File ownership:** stay within your ticket's file list (see `docs/tickets/README.md`).
 

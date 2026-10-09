@@ -211,8 +211,8 @@ Recipients are stored by JID, so renaming a group does not break them. If a new 
 ## Security model
 
 - The add-on opens **no ports** on your host. It cannot be reached from your LAN or the internet.
-- The API only accepts connections from Home Assistant Core (by source IP). The Web UI only accepts connections from the Supervisor's ingress proxy, so it sits behind your Home Assistant login.
-- Every API call needs the bearer API key.
+- The API only accepts connections from Home Assistant Core's internal address (by source IP). Normal add-ons are refused. **Add-ons that use host networking share Core's address**, so the IP check cannot tell them apart from Core. For those, the API key is the only barrier. The Web UI only accepts connections from the Supervisor's ingress proxy, so it sits behind your Home Assistant login.
+- Every API call needs the bearer API key. Use a long random key, and keep it out of anything other add-ons can read.
 - The optional `allowed_targets` add-on option limits who the gateway can message, even if something sends a request with the key.
 - **Incoming messages are never read or stored.** The gateway only sends. It keeps the WhatsApp session and a list of group names, JIDs and sizes.
 - API keys and message bodies are never logged, and phone numbers are masked in the log.

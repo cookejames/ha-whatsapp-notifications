@@ -30,3 +30,4 @@ Source of truth for the work breakdown. Spec: [../spec.md](../spec.md). HTTP con
 | [T14](T14-wire-up.md) | Wire-up, Docker build, smoke test | done | T05, T06, T07 | 5 |
 | [T15](T15-release-hygiene.md) | Release hygiene and CLAUDE.md refresh | done | all | 5 |
 | [T16](T16-apparmor-s6.md) | AppArmor profile blocks s6-overlay `/init` | done | T14 | 6 |
+| [T17](T17-history-sync-and-security-docs.md) | Minimal history sync; accurate security docs | review | T05, T13 | 6 |
