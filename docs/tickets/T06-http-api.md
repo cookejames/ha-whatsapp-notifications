@@ -1,7 +1,7 @@
 ---
 id: T06
 title: HTTP API server, IP filter, auth
-status: todo
+status: review
 depends_on: [T03, T04]
 wave: 4
 ---
@@ -34,3 +34,17 @@ spec §2.1; api.md (all routes, envelopes and codes)
 Ingress (T07), `index.ts` wiring (T14).
 
 ## Questions / notes
+- `/groups?refresh=true` cooldown: the `WhatsAppClient` interface (and `GroupCache.refresh()`) cannot signal that the 60 s cooldown was hit; it silently returns the cached list. `http.ts` therefore tracks its own 60 s cooldown (`GROUP_COOLDOWN_MS`) and answers `refreshed:false` without calling the client while it is active. Limitation: if the client's own cooldown is active because of an automatic refresh, the route still reports `refreshed:true`. Suggest a future change so `refreshGroups()` returns `{groups, refreshed}`.
+- api.md does not say where `suggestions` sits in an error result. It is placed inside the `error` object (`{to, error: {code, message, suggestions}}`). Please confirm; T10 / the Python client should read it from there.
+- A non-http(s) or unparsable `image.url` / `document.url` is rejected as `400 invalid_request` during schema validation (api.md says `url` is http/https), rather than `422 media_fetch_failed`.
+- `message: ""` with no media is treated as missing (`400`). Unknown extra body fields are ignored.
+- Per-target error results carry `jid` when the target resolved (for example `target_not_allowed`, send errors) and omit it when resolution failed.
+- Auth runs before routing, so unknown paths and wrong methods need a valid key first (api.md order of checks). `405` responses include an `Allow` header; `401` includes `WWW-Authenticate: Bearer`.
+
+## Implementation notes
+- `src/ipfilter.ts`: `createIpFilter({allow, resolveHosts?, refreshMs, resolver?})` returns `{isAllowed, refresh, stop}`; also exports the structural `IpFilter` type and `normaliseAddress`. Uses `node:net` `BlockList`; loopback is always allowed; IPv4-mapped IPv6 and zone ids are normalised; invalid `allow` entries are ignored (deny). The default resolver is `dns.lookup(all)`. A failed lookup keeps that host's previous addresses. The timer is unref'd. The filter does not resolve at construction: the caller (T14) should `await filter.refresh()` before listening.
+- `src/http.ts`: `createApiServer({client, queue, options: {apiKey, allowedTargets}, ipFilter, logger, version, remoteAddress?, fetchImpl?, now?})` returns an `http.Server` (not listening). `remoteAddress`, `fetchImpl` and `now` are test seams. Re-exports `IpFilter`; exports the `HttpErrorCode` and `TargetErrorCode` unions and the limit constants.
+- Auth compares SHA-256 digests with `timingSafeEqual`. Body cap is 24 MiB (declared length checked first, then streamed; the stream is paused rather than destroyed so the 413 reaches the client).
+- `/send`: per target, text goes out before media; the last id is reported; a failed text send skips the media. Targets resolving to the same JID share one outcome and are sent once. Media is loaded once with 16 MiB / 15 s.
+- Logging: only masked JIDs, counts and media kind at `info`; unhandled errors log only the error name (parser and fetch errors can echo request content). A test asserts the key, auth header, body, caption and full JIDs never appear in logs.
+- Verification: lint, typecheck clean; 227 tests pass; coverage http.ts 98.4% lines, ipfilter.ts 100% lines.
