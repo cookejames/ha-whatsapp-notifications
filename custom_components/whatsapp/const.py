@@ -15,7 +15,7 @@ CONF_URL: Final = "url"
 CONF_API_KEY: Final = "api_key"
 CONF_RECIPIENTS: Final = "recipients"
 
-DEFAULT_URL: Final = "http://local-whatsapp-gateway:8099"
+DEFAULT_URL: Final = "http://50eb1446-whatsapp-gateway:8099"
 DEFAULT_TITLE: Final = "WhatsApp Gateway"
 DEVICE_NAME: Final = "WhatsApp"
 

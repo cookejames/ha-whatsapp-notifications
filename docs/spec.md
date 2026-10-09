@@ -259,7 +259,7 @@ These map exactly to [api.md](api.md). Errors are raised as:
 Timeout is 30 seconds for `send` and 10 seconds for the others.
 
 ### 4.3 Config flow
-- **User step fields:** `url` (default `http://local-whatsapp-gateway:8099`; the docs explain where to find the real hostname on the add-on's Info page), `api_key`.
+- **User step fields:** `url` (default `http://50eb1446-whatsapp-gateway:8099`: Supervisor names repository add-ons `<sha1(repo URL)[:8]>-<slug>`; the docs explain how to confirm the hostname on the add-on's Info page), `api_key`.
 - Validates by calling `status()`. Errors map to `cannot_connect`, `invalid_auth` or `unknown`.
 - **Unique ID:** the normalised URL. The entry title is "WhatsApp Gateway".
 - **Reauth flow:** used when the API key changes.
