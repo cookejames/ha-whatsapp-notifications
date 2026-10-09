@@ -1,7 +1,7 @@
 ---
 id: T10
 title: send_message and list_groups services
-status: review
+status: done
 depends_on: [T08]
 wave: 3
 ---
