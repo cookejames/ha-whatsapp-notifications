@@ -1,1 +1,52 @@
-{}
+send_message:
+  fields:
+    config_entry_id:
+      required: false
+      selector:
+        config_entry:
+          integration: whatsapp
+    target:
+      required: true
+      example: '["notify.whatsapp_alice", "group:Family", "+15555550123"]'
+      selector:
+        text:
+          multiple: true
+    message:
+      required: false
+      example: "Front door opened"
+      selector:
+        text:
+          multiline: true
+    title:
+      required: false
+      example: "Security"
+      selector:
+        text:
+    image_url:
+      required: false
+      example: "https://example.com/snapshot.jpg"
+      selector:
+        text:
+    image_path:
+      required: false
+      example: "/config/www/snapshot.jpg"
+      selector:
+        text:
+    document_path:
+      required: false
+      example: "/config/www/report.pdf"
+      selector:
+        text:
+    caption:
+      required: false
+      example: "Daily report"
+      selector:
+        text:
+
+list_groups:
+  fields:
+    config_entry_id:
+      required: false
+      selector:
+        config_entry:
+          integration: whatsapp
