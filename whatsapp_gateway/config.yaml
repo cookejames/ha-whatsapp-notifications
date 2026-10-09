@@ -8,8 +8,6 @@ init: false
 ingress: true
 ingress_port: 8098
 panel_icon: mdi:whatsapp
-host_network: false
-apparmor: true
 options:
   api_key: ""
   pairing_phone_number: ""

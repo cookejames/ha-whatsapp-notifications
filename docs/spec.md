@@ -36,7 +36,7 @@ HA automation → notify.send_message / whatsapp.send_message
 ```
 
 ### 2.1 Network exposure
-- The add-on declares **no `ports:`** and `host_network: false`. It can't be reached from the LAN or the internet.
+- The add-on declares **no `ports:`** (and leaves `host_network` and `apparmor` at their defaults: off and on). It can't be reached from the LAN or the internet.
 - Two listeners:
   - **API listener**, port `8099`, used by HA Core at `http://<addon-hostname>:8099`.
   - **Ingress listener**, port `8098` (`ingress_port`), used only by the Supervisor ingress proxy.
@@ -65,8 +65,6 @@ init: false
 ingress: true
 ingress_port: 8098
 panel_icon: mdi:whatsapp
-host_network: false
-apparmor: true
 options:
   api_key: ""
   pairing_phone_number: ""
@@ -340,7 +338,7 @@ Triggers: `push` to `main` and `pull_request`. The workflow uses `permissions: c
 | `hacs` | `hacs/action` with `category: integration` |
 | `addon-lint` | `frenck/action-addon-linter` with `path: ./whatsapp_gateway` |
 | `addon-build` | `home-assistant/builder/actions/build-image` matrix (amd64 on `ubuntu-latest`, aarch64 on `ubuntu-24.04-arm`), context `whatsapp_gateway`, `push: false`, `BUILD_FROM=ghcr.io/home-assistant/<arch>-base:3.24` (matches `build.yaml`; Alpine 3.24 ships Node 24). The legacy `--test` builder action is deprecated. |
-| `secrets` | `gitleaks/gitleaks-action` with checkout `fetch-depth: 0` |
+| `secrets` | gitleaks CLI (`zricethezav/gitleaks` image) over the full history, checkout `fetch-depth: 0` |
 
 `.github/dependabot.yml` covers weekly updates for `npm` (`/whatsapp_gateway`), `pip` (`/`) and `github-actions` (`/`).
 
