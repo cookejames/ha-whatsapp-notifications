@@ -23,11 +23,51 @@ Read the relevant spec sections and your ticket before writing code. When the sp
 - **File ownership:** stay within your ticket's file list (see `docs/tickets/README.md`).
 
 ## Commands
-Commands are filled in as the tickets land. The expected commands are:
-- Node comes from nvm and is pinned in the root `.nvmrc`. Run `. "$NVM_DIR/nvm.sh" && nvm use` first.
-- Gateway (run in `whatsapp_gateway/`): `npm ci`, `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`
-- Integration (repo root, always inside a venv on Python ≥ 3.14): `python3 -m venv .venv && . .venv/bin/activate`, then `pip install -r requirements_test.txt`, `ruff check .`, `ruff format --check .`, `pytest`
-- Smoke test: `scripts/smoke.sh` (needs Docker; runs the add-on with `GATEWAY_FAKE=1`)
+Node comes from nvm and is pinned in the root `.nvmrc` (24). Python work always happens in a venv on Python ≥ 3.14, which current Home Assistant requires.
 
-## CI
-GitHub Actions, in `.github/workflows/ci.yml`: gateway, integration, hassfest, HACS, add-on lint, add-on build test, gitleaks.
+**Gateway** (run in `whatsapp_gateway/`, after `. "$NVM_DIR/nvm.sh" && nvm use`):
+- `npm ci`
+- `npm run lint` (eslint)
+- `npm run typecheck` (checks src and tests)
+- `npm test` (vitest); a single file: `npx vitest run test/jid.test.ts`
+- `npm run test:coverage`
+- `npm run build` (compiles to `dist/`)
+
+**Integration** (repo root):
+- `python3 -m venv .venv && .venv/bin/pip install -r requirements_test.txt`
+- `.venv/bin/ruff check .` and `.venv/bin/ruff format --check .`
+- `.venv/bin/pytest`; a single file: `.venv/bin/pytest tests/test_services.py`
+
+**End to end:** `sh scripts/smoke.sh` builds the add-on image and runs it with `GATEWAY_FAKE=1` (no real WhatsApp). It checks `/health`, auth, `/groups`, `/send` and clean shutdown. Needs Docker.
+
+**Running the gateway locally:** `GATEWAY_FAKE=1 OPTIONS_PATH=<options.json> DATA_DIR=<dir> node dist/index.js`. Ingress listens on 8098; the API listens on 8099, and only when the API key is at least 16 characters.
+
+## Gateway architecture (`whatsapp_gateway/src/`)
+- `index.ts`: `startGateway()` wiring and signal handling
+- `options.ts`: reads `/data/options.json`
+- `client.ts`: the `WhatsAppClient` interface. `whatsapp.ts` (Baileys) and `fake-client.ts` implement it.
+- `groups.ts`: group cache, persisted to `groups.json`
+- `jid.ts`: target resolution (phone numbers, JIDs, `group:<name>`) and the allowlist
+- `queue.ts`: rate-limited serial send queue
+- `media.ts`: image/document loading with limits
+- `http.ts`: API server (implements `docs/api.md`)
+- `ipfilter.ts`: source-IP allowlist
+- `ingress.ts`: admin status page
+- `logger.ts`: pino logger and `maskJid`
+
+The Dockerfile `CMD` runs under s6 `/init` and needs `with-contenv`, otherwise environment variables don't reach Node.
+
+## Integration architecture (`custom_components/whatsapp/`)
+- `api.py`: the HTTP client
+- `coordinator.py`: polls `/status`
+- `config_flow.py`, `options_flow.py`: setup, and recipients (people and groups)
+- `notify.py`: one entity per recipient
+- `binary_sensor.py`: connectivity
+- `services.py`: `send_message` and `list_groups`
+
+Runtime data is `entry.runtime_data`. All entities share one service device named "WhatsApp". `strings.json` and `translations/en.json` must stay identical.
+
+## CI and releases
+GitHub Actions (`.github/workflows/ci.yml`) runs these jobs: gateway, integration, hassfest, HACS, add-on lint, add-on build (amd64 and aarch64), and gitleaks over the full history. Third-party actions are pinned by SHA.
+
+To release: bump `version` in `whatsapp_gateway/config.yaml`, `whatsapp_gateway/package.json` and `custom_components/whatsapp/manifest.json`, update both CHANGELOGs, and tag `vX.Y.Z`. Review `FALLBACK_WA_VERSION` in `whatsapp.ts` on every Baileys bump.

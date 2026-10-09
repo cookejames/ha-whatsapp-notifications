@@ -1,7 +1,7 @@
 ---
 id: T15
 title: Release hygiene and CLAUDE.md refresh
-status: todo
+status: done
 depends_on: [T01, T02, T03, T04, T05, T06, T07, T08, T09, T10, T11, T12, T13, T14]
 wave: 5
 ---
@@ -28,3 +28,6 @@ None.
 New features.
 
 ## Questions / notes
+
+## Implementation notes
+Done by the orchestrator. Versions are 0.1.0 across `config.yaml`, `package.json`, `manifest.json` and both CHANGELOGs. CLAUDE.md is refreshed with real commands and architecture. gitleaks over the full history and the private deny-list scan are both clean.
