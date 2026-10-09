@@ -1,0 +1,19 @@
+configuration:
+  api_key:
+    name: API key
+    description: Shared secret the Home Assistant integration uses to call the gateway. At least 16 characters.
+  pairing_phone_number:
+    name: Pairing phone number
+    description: Digits only, with country code and no plus sign. If set, a pairing code is shown instead of a QR code. Leave empty to link by scanning a QR code.
+  allowed_targets:
+    name: Allowed targets
+    description: Phone numbers, JIDs or group:<name> entries that may be messaged. An empty list allows every target.
+  rate_limit_per_minute:
+    name: Rate limit per minute
+    description: Maximum number of messages sent in any rolling 60 second window (1 to 60).
+  trusted_sources:
+    name: Trusted sources
+    description: Extra IP addresses or CIDR ranges allowed to call the API, in addition to Home Assistant.
+  log_level:
+    name: Log level
+    description: Verbosity of the add-on log. API keys and message bodies are never logged.

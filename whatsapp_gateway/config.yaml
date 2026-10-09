@@ -1,0 +1,26 @@
+name: WhatsApp Gateway
+slug: whatsapp_gateway
+version: "0.1.0"
+description: Send WhatsApp messages from Home Assistant via a linked device
+url: https://github.com/cookejames/ha-whatsapp-notifications
+arch: [amd64, aarch64]
+init: false
+ingress: true
+ingress_port: 8098
+panel_icon: mdi:whatsapp
+host_network: false
+apparmor: true
+options:
+  api_key: ""
+  pairing_phone_number: ""
+  allowed_targets: []
+  rate_limit_per_minute: 10
+  trusted_sources: []
+  log_level: info
+schema:
+  api_key: password
+  pairing_phone_number: "match(^[0-9]{0,15}$)?"
+  allowed_targets: ["str"]
+  rate_limit_per_minute: "int(1,60)"
+  trusted_sources: ["str"]
+  log_level: "list(debug|info|warning|error)"
