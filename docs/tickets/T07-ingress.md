@@ -1,7 +1,7 @@
 ---
 id: T07
 title: Ingress status page
-status: todo
+status: review
 depends_on: [T05, T06]
 wave: 4
 ---
@@ -30,3 +30,13 @@ Rendering per state, escaping, QR SVG present, POST actions call through, and a 
 API routes, wiring.
 
 ## Questions / notes
+
+- `IngressIpFilter` is declared structurally in `ingress.ts` (`{ isAllowed(remoteAddress) }`) because T06 owns `ipfilter.ts`. T14 must pass the real filter (172.30.32.2 plus loopback) and the add-on's `apiKeyConfigured` boolean.
+- Ambiguity: the spec doesn't say what the page shows for `closed`/`starting`; it just shows the badge. Reset pairing sits under "Advanced" in every state except `logged_out`/`conflict`.
+- `resetAuth()` is awaited before the 303, so the redirect may be slow; errors from it and from `refreshGroups()` are logged (message only) and still redirect.
+
+## Implementation notes
+- `ingress.ts` exports `createIngressServer`, `IngressIpFilter`, plus `renderPage`/`escapeHtml`. Plain `node:http`; the IP filter runs first (403), then routing: `GET|HEAD /`, `POST /refresh-groups`, `POST /reset-pairing` (303 to `./`), 405 for wrong methods, 404 otherwise, 500 on render failure.
+- Page: inline CSS with light/dark via `prefers-color-scheme`, state badge plus `since`, pairing code or server-rendered inline SVG QR, API key warning, member-only groups sorted case-insensitively with Copy JID buttons (`data-jid`, small inline script), refresh form, reset form with JS confirm. `<meta http-equiv="refresh" content="5">` only in `pairing`/`connecting`.
+- All dynamic text goes through `escapeHtml`. The API key and message content are never rendered or logged.
+- Verification: lint, typecheck, test and test:coverage pass; `ingress.ts` is 100% lines.
