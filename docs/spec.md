@@ -23,7 +23,7 @@ This is a public open-source project.
   - Group JID: `120363000000000000@g.us`; a second one: `120363000000000001@g.us`
   - LID: `100000000000000@lid`
   - Names: `Alice`, `Bob`, group `Family`, group `Garden Club`
-  - API key: `test-api-key-0123456789abcdef`
+  - API key: `test-api-key-0123456789abcdef`; a deliberately wrong key: `wrong-key-0123456789`
 - Do not log API keys or message bodies at any level. Mask recipients at `info` level and above (e.g. `1555****123@s.whatsapp.net`).
 
 ## 2. Architecture
