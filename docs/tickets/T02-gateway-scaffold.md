@@ -1,7 +1,7 @@
 ---
 id: T02
 title: Gateway scaffold, options, client interface, fake client
-status: todo
+status: review
 depends_on: [T01]
 wave: 2
 ---
@@ -46,3 +46,15 @@ Option parsing (defaults, invalid values, short key), masking, and the fake clie
 Real Baileys logic, HTTP servers.
 
 ## Questions / notes
+- Dockerfile base is pinned to Alpine 3.22 (`ghcr.io/home-assistant/amd64-base:3.22`). Alpine 3.22 ships nodejs 22.x; 3.23 and 3.24 (the newest tag available) ship Node 24, which would not match `.nvmrc`/`engines`. When moving to a newer base, check the Alpine nodejs major first. `build.yaml` uses the same tag for aarch64.
+- Spec §3.2 lists no `version` key in the sample, but the ticket requires version `0.1.0`, so `config.yaml` has `version: "0.1.0"`.
+- `src/index.ts` keeps the process alive with a timer until SIGTERM/SIGINT; T14 replaces it with real servers.
+
+## Implementation notes
+- Baileys pinned exactly to `7.0.0-rc14` (npm `latest`; 6.7.24 is tagged `legacy`). Published 2026-07-29.
+- TypeScript is `~6.0.3` because `typescript-eslint` 8.71.1 peer range is `>=4.8.4 <6.1.0`. `@types/node` is `^22.20.5` to match the runtime.
+- Extra files beyond the ticket list (needed by tooling): root `.nvmrc` (`22`, assigned to this ticket by the coordinator) and `whatsapp_gateway/tsconfig.test.json` (so `npm run typecheck` also checks `test/` and `vitest.config.ts`).
+- `loadOptions(path)` and `parseOptions(raw)` both return `{ ok: true, options } | { ok: false, code, error }` and never throw. Error text never includes the key.
+- `FakeWhatsAppClient` helpers: `setState`, `setGroups`, `setRefreshResult`, `failNextSend`, `sent[]`, `refreshCount`.
+- `maskJid` shows at most the first 4 and last 3 local-part characters; local parts of 7 or fewer characters are fully masked.
+- Verified on host Node 22.23.3: `npm ci`, `npm run lint`, `npm run typecheck`, `npm test` (30 tests) pass. `docker build --platform linux/amd64 whatsapp_gateway` succeeds; the `--platform` flag is only needed on arm64 hosts, since the default base image is amd64.
