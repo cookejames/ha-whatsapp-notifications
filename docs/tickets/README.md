@@ -17,7 +17,7 @@ Source of truth for the work breakdown. Spec: [../spec.md](../spec.md). HTTP con
 | [T01](T01-repo-scaffold.md) | Repo scaffold | done | none | 1 |
 | [T02](T02-gateway-scaffold.md) | Gateway scaffold, options, client interface, fake client | todo | T01 | 2 |
 | [T08](T08-integration-scaffold.md) | Integration scaffold, API client, config flow | todo | T01 | 2 |
-| [T12](T12-ci.md) | GitHub Actions CI and Dependabot | todo | T01 | 2 |
+| [T12](T12-ci.md) | GitHub Actions CI and Dependabot | done | T01 | 2 |
 | [T03](T03-jid.md) | Target resolution and allowlist (`jid.ts`) | todo | T02 | 3 |
 | [T04](T04-queue-media.md) | Send queue and media loader | todo | T02 | 3 |
 | [T05](T05-baileys-client.md) | Baileys client and group cache | todo | T02 | 3 |

@@ -339,7 +339,7 @@ Triggers: `push` to `main` and `pull_request`. The workflow uses `permissions: c
 | `hassfest` | `home-assistant/actions/hassfest` |
 | `hacs` | `hacs/action` with `category: integration` |
 | `addon-lint` | `frenck/action-addon-linter` with `path: ./whatsapp_gateway` |
-| `addon-build` | `home-assistant/builder` with `--test --amd64 --aarch64 --target /data/whatsapp_gateway` (build only, no push) |
+| `addon-build` | `home-assistant/builder/actions/build-image` matrix (amd64 on `ubuntu-latest`, aarch64 on `ubuntu-24.04-arm`), context `whatsapp_gateway`, `push: false`, `BUILD_FROM=ghcr.io/home-assistant/<arch>-base:latest`. The legacy `--test` builder action is deprecated. |
 | `secrets` | `gitleaks/gitleaks-action` with checkout `fetch-depth: 0` |
 
 `.github/dependabot.yml` covers weekly updates for `npm` (`/whatsapp_gateway`), `pip` (`/`) and `github-actions` (`/`).

@@ -1,7 +1,7 @@
 ---
 id: T12
 title: GitHub Actions CI and Dependabot
-status: review
+status: done
 depends_on: [T01]
 wave: 2
 ---
