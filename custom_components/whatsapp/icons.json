@@ -1,0 +1,10 @@
+{
+  "services": {
+    "send_message": {
+      "service": "mdi:whatsapp"
+    },
+    "list_groups": {
+      "service": "mdi:account-group"
+    }
+  }
+}

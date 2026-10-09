@@ -1,0 +1,182 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to the WhatsApp Gateway",
+        "description": "Enter the address and API key of the WhatsApp Gateway add-on. The hostname is shown on the add-on's Info page.",
+        "data": {
+          "url": "Gateway URL",
+          "api_key": "API key"
+        },
+        "data_description": {
+          "url": "For example http://local-whatsapp-gateway:8099",
+          "api_key": "The api_key set in the add-on configuration."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Re-authenticate with the WhatsApp Gateway",
+        "description": "The gateway at {url} rejected the API key. Enter the current key from the add-on configuration.",
+        "data": {
+          "api_key": "API key"
+        },
+        "data_description": {
+          "api_key": "The api_key set in the add-on configuration."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to the gateway. Check the URL and that the add-on is running.",
+      "invalid_auth": "The gateway rejected the API key.",
+      "unknown": "Unexpected error."
+    },
+    "abort": {
+      "already_configured": "This gateway is already configured.",
+      "reauth_successful": "Re-authentication was successful."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "WhatsApp recipients",
+        "description": "Each recipient becomes a notify entity.",
+        "menu_options": {
+          "add_person": "Add person",
+          "add_group": "Add group",
+          "remove": "Remove recipient"
+        }
+      },
+      "add_person": {
+        "title": "Add person",
+        "data": {
+          "name": "Name",
+          "phone": "Phone number"
+        },
+        "data_description": {
+          "name": "Used for the entity name, for example Alice.",
+          "phone": "International format, for example +15555550123."
+        }
+      },
+      "add_group": {
+        "title": "Add group",
+        "description": "The linked WhatsApp number must be a member of the group.",
+        "data": {
+          "group": "Group",
+          "name": "Name"
+        },
+        "data_description": {
+          "group": "Pick one of the groups the linked number belongs to.",
+          "name": "Used for the entity name. Defaults to the group name."
+        }
+      },
+      "remove": {
+        "title": "Remove recipient",
+        "data": {
+          "recipients": "Recipients to remove"
+        }
+      }
+    },
+    "error": {
+      "invalid_phone": "Enter a valid phone number with 7 to 15 digits.",
+      "cannot_connect": "Failed to connect to the gateway.",
+      "invalid_auth": "The gateway rejected the API key.",
+      "unknown": "Unexpected error."
+    },
+    "abort": {
+      "no_groups": "No groups were found. Add the linked WhatsApp number to a group first, then try again."
+    }
+  },
+  "exceptions": {
+    "not_connected": {
+      "message": "WhatsApp is not connected on the gateway. Check the add-on's status page."
+    },
+    "target_error": {
+      "message": "Could not send to {target}: {error}"
+    },
+    "all_targets_failed": {
+      "message": "The message could not be sent to any target: {errors}"
+    },
+    "path_not_allowed": {
+      "message": "Reading {path} is not allowed. Add its folder to allowlist_external_dirs."
+    },
+    "file_too_large": {
+      "message": "{path} is larger than the 16 MiB limit."
+    },
+    "file_read_error": {
+      "message": "Could not read {path}: {error}"
+    },
+    "message_required": {
+      "message": "A message is required unless an image or document is given."
+    },
+    "multiple_media": {
+      "message": "Only one of image_url, image_path or document_path can be given."
+    },
+    "entity_not_found": {
+      "message": "{entity_id} is not a WhatsApp recipient entity."
+    },
+    "config_entry_not_found": {
+      "message": "No WhatsApp gateway config entry was found."
+    },
+    "multiple_config_entries": {
+      "message": "More than one WhatsApp gateway is configured. Specify config_entry_id."
+    },
+    "gateway_error": {
+      "message": "The gateway returned an error: {error}"
+    },
+    "cannot_connect": {
+      "message": "Cannot connect to the WhatsApp gateway."
+    },
+    "invalid_auth": {
+      "message": "The WhatsApp gateway rejected the API key."
+    }
+  },
+  "services": {
+    "send_message": {
+      "name": "Send message",
+      "description": "Sends a WhatsApp message, optionally with an image or document, to one or more recipients.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Gateway",
+          "description": "The gateway to send with. Optional when only one is configured."
+        },
+        "target": {
+          "name": "Target",
+          "description": "Recipients: notify entities from this integration, phone numbers, JIDs or group:Name (for example group:Family)."
+        },
+        "message": {
+          "name": "Message",
+          "description": "The message text. Required unless an image or document is given."
+        },
+        "title": {
+          "name": "Title",
+          "description": "Optional title, shown in bold above the message."
+        },
+        "image_url": {
+          "name": "Image URL",
+          "description": "An http or https URL of an image to send."
+        },
+        "image_path": {
+          "name": "Image path",
+          "description": "Path of a local image file. It must be in an allowed folder."
+        },
+        "document_path": {
+          "name": "Document path",
+          "description": "Path of a local file to send as a document. It must be in an allowed folder."
+        },
+        "caption": {
+          "name": "Caption",
+          "description": "Caption for the image or document. Defaults to the message."
+        }
+      }
+    },
+    "list_groups": {
+      "name": "List groups",
+      "description": "Returns the groups the linked WhatsApp account is a member of, with their JIDs.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Gateway",
+          "description": "The gateway to query. Optional when only one is configured."
+        }
+      }
+    }
+  }
+}
