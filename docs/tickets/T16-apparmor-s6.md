@@ -1,7 +1,7 @@
 ---
 id: T16
 title: AppArmor profile blocks s6-overlay /init on Home Assistant OS
-status: review
+status: done
 depends_on: [T14]
 wave: 6
 ---
@@ -29,3 +29,4 @@ The profile in `apparmor.txt` had no rules for s6-overlay. The base image's entr
 
 ## Implementation notes
 - The profile uses `rix` for s6-overlay scripts, and adds `chown/dac_override/dac_read_search/fowner/fsetid/kill/setgid/setuid` capabilities, `unix`, and `signal`. `/data/{,**}` and `/app/{,**}` now include the directories themselves.
+- Verified in CI (PR #4): the profile was loaded in enforce mode, the full smoke test passed confined, and there were no denials in dmesg. A real HA OS start is still to be confirmed.
