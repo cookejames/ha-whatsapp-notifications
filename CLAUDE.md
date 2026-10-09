@@ -24,6 +24,7 @@ Read the relevant spec sections and your ticket before writing code. When the sp
 
 ## Commands
 Commands are filled in as the tickets land. The expected commands are:
+- Node comes from nvm and is pinned in the root `.nvmrc`. Run `. "$NVM_DIR/nvm.sh" && nvm use` first.
 - Gateway (run in `whatsapp_gateway/`): `npm ci`, `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`
 - Integration (repo root): `pip install -r requirements_test.txt`, `ruff check .`, `ruff format --check .`, `pytest`
 - Smoke test: `scripts/smoke.sh` (needs Docker; runs the add-on with `GATEWAY_FAKE=1`)
