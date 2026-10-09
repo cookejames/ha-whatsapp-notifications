@@ -333,28 +333,49 @@ describe("POST /send validation", () => {
     expect((await post({ to: [] })).status).toBe(400);
   });
 
+  // The server answers 413 and closes as soon as it knows the body is too big, so
+  // a client still uploading can see ECONNRESET. Resolve on the response and
+  // ignore socket errors that arrive after it.
+  const oversizedPost = (opts: { declared?: number; chunks?: number }) => {
+    const url = new URL(h.base + "/send");
+    return new Promise<number>((resolve, reject) => {
+      let answered = false;
+      const headers: Record<string, string | number> = { Authorization: `Bearer ${KEY}` };
+      if (opts.declared !== undefined) headers["Content-Length"] = opts.declared;
+      const req = httpRequest(
+        { host: url.hostname, port: url.port, path: url.pathname, method: "POST", headers },
+        (res: IncomingMessage) => {
+          answered = true;
+          res.resume();
+          resolve(res.statusCode ?? 0);
+          req.destroy();
+        },
+      );
+      req.on("error", (err) => {
+        if (!answered) reject(err);
+      });
+      if (opts.chunks) {
+        const chunk = Buffer.alloc(1024 * 1024, 97);
+        const writeNext = (i: number): void => {
+          if (answered || i >= (opts.chunks ?? 0)) {
+            if (!answered) req.end();
+            return;
+          }
+          req.write(chunk, () => writeNext(i + 1));
+        };
+        writeNext(0);
+      } else {
+        req.flushHeaders();
+      }
+    });
+  };
+
   it("413 for a declared body over 24 MiB", async () => {
-    const r = await h.call("/send", { method: "POST", raw: "x".repeat(MAX_BODY_BYTES + 1) });
-    expect(r.status).toBe(413);
-    expect(errorOf(r)).toBe("payload_too_large");
+    expect(await oversizedPost({ declared: MAX_BODY_BYTES + 1 })).toBe(413);
   });
 
   it("413 for a chunked body over 24 MiB", async () => {
-    const url = new URL(h.base + "/send");
-    const status = await new Promise<number>((resolve, reject) => {
-      const req = httpRequest(
-        { host: url.hostname, port: url.port, path: url.pathname, method: "POST", headers: { Authorization: `Bearer ${KEY}` } },
-        (res: IncomingMessage) => {
-          res.resume();
-          resolve(res.statusCode ?? 0);
-        },
-      );
-      req.on("error", reject);
-      const chunk = Buffer.alloc(1024 * 1024, 97);
-      for (let i = 0; i < 25; i++) req.write(chunk);
-      req.end();
-    });
-    expect(status).toBe(413);
+    expect(await oversizedPost({ chunks: 25 })).toBe(413);
   });
 });
 

@@ -1,7 +1,7 @@
 ---
 id: T14
 title: Wire-up, Docker build, smoke test
-status: review
+status: done
 depends_on: [T05, T06, T07]
 wave: 5
 ---
@@ -47,3 +47,5 @@ Real WhatsApp pairing. That's a manual step done by the maintainer.
 ## Questions / notes
 - **Dockerfile change (needed, proven by smoke test):** the HA base image runs s6-overlay `/init`, which drops the container environment for `CMD`. `GATEWAY_FAKE`, `DATA_DIR` and `OPTIONS_PATH` never reached node, so the real Baileys client started. The `CMD` is now `["with-contenv", "node", "dist/index.js"]`. T02 owns the Dockerfile; please confirm this edit.
 - Pre-existing flake (T06, not changed here): `test/http.test.ts` "413 for a declared body over 24 MiB" fails intermittently with `ECONNRESET` on macOS (about 1 in 3 runs).
+
+- Orchestrator follow-up: the flaky 413 tests in `http.test.ts` now send only headers or stop writing once the response arrives, so socket errors after the 413 are ignored. 8 consecutive runs pass. The Dockerfile `with-contenv` change is accepted.
