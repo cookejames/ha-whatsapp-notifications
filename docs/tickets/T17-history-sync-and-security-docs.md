@@ -1,7 +1,7 @@
 ---
 id: T17
 title: Minimal history sync for LID mappings; accurate security docs
-status: review
+status: done
 depends_on: [T05, T13]
 wave: 6
 ---
