@@ -1,7 +1,7 @@
 ---
 id: T10
 title: send_message and list_groups services
-status: todo
+status: review
 depends_on: [T08]
 wave: 3
 ---
@@ -35,3 +35,14 @@ Schema errors, entity target mapping, a disallowed path, an oversized file, a UR
 The notify entities, the options flow.
 
 ## Questions / notes
+- `notify.*` targets that are not a recipient entity of the selected entry raise `target_error` (not `entity_not_found`, which stays unused by T10), with the error text "not a WhatsApp recipient entity".
+- Spec says a title is "formatted as in 4.5"; with no message text (media only) the title is ignored.
+- No changes needed in shared files.
+
+## Implementation notes
+- `services.py` registers both services in `async_setup_services` (called from `async_setup`). `send_message` uses `SupportsResponse.OPTIONAL`, `list_groups` uses `ONLY`.
+- Validation order: `multiple_media`, `message_required` (both `ServiceValidationError`), then config entry lookup (`config_entry_not_found`, `multiple_config_entries`), then target resolution, then file loading.
+- Entity targets resolve through the entity registry (platform == DOMAIN, same config entry, unique_id `<entry_id>_<recipient_id>`) and `entry.options["recipients"]`.
+- Files: `is_allowed_path`, then read in an executor capped at `MAX_MEDIA_BYTES + 1` bytes (`file_too_large`; OS errors give `file_read_error`), then base64. Document mimetype comes from `mimetypes`, defaulting to `application/octet-stream`.
+- Gateway errors map to `not_connected`, `invalid_auth`, `cannot_connect`, `gateway_error`. If every result has an `error`, `all_targets_failed` is raised.
+- Verified: ruff check/format clean, 46 tests pass, `services.py` coverage 100%, hassfest reports 0 invalid integrations.
