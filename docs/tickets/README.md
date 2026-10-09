@@ -21,7 +21,7 @@ Source of truth for the work breakdown. Spec: [../spec.md](../spec.md). HTTP con
 | [T03](T03-jid.md) | Target resolution and allowlist (`jid.ts`) | done | T02 | 3 |
 | [T04](T04-queue-media.md) | Send queue and media loader | todo | T02 | 3 |
 | [T05](T05-baileys-client.md) | Baileys client and group cache | todo | T02 | 3 |
-| [T09](T09-options-notify.md) | Recipients options flow and notify entities | todo | T08 | 3 |
+| [T09](T09-options-notify.md) | Recipients options flow and notify entities | done | T08 | 3 |
 | [T10](T10-services.md) | `send_message` and `list_groups` services | todo | T08 | 3 |
 | [T11](T11-binary-sensor.md) | Connected binary sensor | done | T08 | 3 |
 | [T06](T06-http-api.md) | HTTP API server, IP filter, auth | todo | T03, T04 | 4 |

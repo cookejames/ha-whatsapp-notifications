@@ -16,7 +16,7 @@ from .api import (
     GatewayError,
     WhatsAppGatewayClient,
 )
-from .const import CONF_RECIPIENTS, DEFAULT_TITLE, DOMAIN
+from .const import CONF_RECIPIENTS, DEVICE_NAME, DOMAIN
 
 PARALLEL_UPDATES = 1
 
@@ -60,7 +60,7 @@ class WhatsAppNotifyEntity(NotifyEntity):
         self._attr_unique_id = f"{entry.entry_id}_{recipient['id']}"
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, entry.entry_id)},
-            name=DEFAULT_TITLE,
+            name=DEVICE_NAME,
             entry_type=DeviceEntryType.SERVICE,
         )
 

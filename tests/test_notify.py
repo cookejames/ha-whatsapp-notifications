@@ -66,7 +66,7 @@ async def test_entities_created(hass: HomeAssistant, entry: MockConfigEntry) -> 
     assert person.supported_features == NotifyEntityFeature.TITLE
     assert person.device_id == group.device_id
     device = dr.async_get(hass).async_get(person.device_id)
-    assert device.name == "WhatsApp Gateway"
+    assert device.name == "WhatsApp"
 
 
 async def _send(hass: HomeAssistant, entity_id: str, **data: str) -> None:

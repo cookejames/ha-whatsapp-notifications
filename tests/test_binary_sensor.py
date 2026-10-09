@@ -21,7 +21,7 @@ from custom_components.whatsapp.const import DOMAIN
 
 from .conftest import GATEWAY_URL, STATUS_OPEN
 
-ENTITY_ID = "binary_sensor.whatsapp_gateway_connected"
+ENTITY_ID = "binary_sensor.whatsapp_connected"
 STATUS_CLOSED = {
     **STATUS_OPEN,
     "state": "closed",
@@ -68,7 +68,7 @@ async def test_on_with_attributes_and_device(
     device = dr.async_get(hass).async_get(entity.device_id)
     assert device is not None
     assert (DOMAIN, mock_config_entry.entry_id) in device.identifiers
-    assert device.name == "WhatsApp Gateway"
+    assert device.name == "WhatsApp"
     assert device.entry_type is dr.DeviceEntryType.SERVICE
 
 

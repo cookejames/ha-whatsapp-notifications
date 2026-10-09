@@ -17,6 +17,7 @@ CONF_RECIPIENTS: Final = "recipients"
 
 DEFAULT_URL: Final = "http://local-whatsapp-gateway:8099"
 DEFAULT_TITLE: Final = "WhatsApp Gateway"
+DEVICE_NAME: Final = "WhatsApp"
 
 STATUS_SCAN_INTERVAL: Final = timedelta(seconds=60)
 

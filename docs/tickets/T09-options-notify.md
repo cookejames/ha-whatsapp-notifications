@@ -1,7 +1,7 @@
 ---
 id: T09
 title: Recipients options flow and notify entities
-status: review
+status: done
 depends_on: [T08]
 wave: 3
 ---
@@ -42,3 +42,5 @@ Services, the binary sensor.
 - `options_flow.py`: `OptionsFlow` without a custom `__init__` argument (uses `self.config_entry`). Menu steps `add_person`, `add_group`, `remove`; phone check is `normalize_phone()`. The group step calls `runtime_data.client.groups()` each time; empty list aborts `no_groups`; auth, connection and other API errors show the `invalid_auth`, `cannot_connect` and `unknown` errors under `base` on an empty form. The group `name` is optional and falls back to the group name. Saving writes `{"recipients": [...]}` and the update listener reloads the entry.
 - `notify.py`: `WhatsAppNotifyEntity` (unique id `<entry_id>_<recipient_id>`, `NotifyEntityFeature.TITLE`, shared service device with identifiers `(DOMAIN, entry_id)`). Stale notify registry entries for the entry are removed during platform setup. Errors: `not_connected`; other gateway errors and per-target error results become `target_error`; auth and connection errors use the existing `invalid_auth` and `cannot_connect` exception keys.
 - Verified: `ruff check`, `ruff format --check`, `pytest` (44 passed, 100% coverage including `notify.py` and `options_flow.py`).
+
+- Orchestrator follow-up: the shared device is named "WhatsApp" (`DEVICE_NAME`), so ids are `notify.whatsapp_<recipient>` and `binary_sensor.whatsapp_connected`. The config entry title stays "WhatsApp Gateway".

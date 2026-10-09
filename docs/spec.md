@@ -276,7 +276,7 @@ Saving reloads the entry.
 - **Errors:**
   - `GatewayError` with code `not_connected`: raise `HomeAssistantError` with the translation key `not_connected`.
   - Other `GatewayError`s: `HomeAssistantError` with the gateway message.
-- Every entity's `device_info` points to a single "WhatsApp Gateway" service device.
+- Every entity's `device_info` points to a single service device named "WhatsApp" (so entity ids are `notify.whatsapp_<recipient>` and `binary_sensor.whatsapp_connected`).
 
 ### 4.6 Services (`services.yaml`, registered in `__init__.py`)
 **`whatsapp.send_message`**
@@ -303,7 +303,7 @@ Rules:
 - Returns `{groups: [{name, jid, participants}]}`
 
 ### 4.7 Binary sensor (`binary_sensor.py`)
-- `binary_sensor.whatsapp_gateway_connected`, `device_class: connectivity`, driven by a `DataUpdateCoordinator` that polls `status()` every 60 seconds.
+- `binary_sensor.whatsapp_connected`, `device_class: connectivity`, driven by a `DataUpdateCoordinator` that polls `status()` every 60 seconds.
 - **Attributes:** `state` (the gateway connection state), `me` (the linked account JID, masked to `1555****123`), `since`.
 - The entity is `unavailable` when the gateway itself can't be reached. It is `off` when the gateway is reachable but WhatsApp isn't open.
 

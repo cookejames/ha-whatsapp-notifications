@@ -15,7 +15,7 @@ from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from . import WhatsAppConfigEntry
-from .const import DEFAULT_TITLE, DOMAIN
+from .const import DEVICE_NAME, DOMAIN
 from .coordinator import WhatsAppStatusCoordinator
 
 
@@ -55,7 +55,7 @@ class WhatsAppConnectedSensor(
         self._attr_unique_id = f"{entry.entry_id}_connected"
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, entry.entry_id)},
-            name=DEFAULT_TITLE,
+            name=DEVICE_NAME,
             entry_type=DeviceEntryType.SERVICE,
         )
 
