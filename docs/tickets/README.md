@@ -29,3 +29,4 @@ Source of truth for the work breakdown. Spec: [../spec.md](../spec.md). HTTP con
 | [T13](T13-docs.md) | User docs: README, DOCS.md, CHANGELOG | done | T05–T11 | 5 |
 | [T14](T14-wire-up.md) | Wire-up, Docker build, smoke test | done | T05, T06, T07 | 5 |
 | [T15](T15-release-hygiene.md) | Release hygiene and CLAUDE.md refresh | done | all | 5 |
+| [T16](T16-apparmor-s6.md) | AppArmor profile blocks s6-overlay `/init` | review | T14 | 6 |

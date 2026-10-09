@@ -343,6 +343,7 @@ Triggers: `push` to `main` and `pull_request`. The workflow uses `permissions: c
 | `hacs` | `hacs/action` with `category: integration` |
 | `addon-lint` | `frenck/action-addon-linter` with `path: ./whatsapp_gateway` |
 | `addon-build` | `home-assistant/builder/actions/build-image` matrix (amd64 on `ubuntu-latest`, aarch64 on `ubuntu-24.04-arm`), context `whatsapp_gateway`, `push: false`, `BUILD_FROM=ghcr.io/home-assistant/<arch>-base:3.24` (matches `build.yaml`; Alpine 3.24 ships Node 24). The legacy `--test` builder action is deprecated. |
+| `addon-apparmor` | Loads `whatsapp_gateway/apparmor.txt` on the runner, runs `scripts/smoke.sh` with `--security-opt apparmor=whatsapp_gateway`, and fails on any AppArmor denial for the profile |
 | `secrets` | gitleaks CLI (`zricethezav/gitleaks` image) over the full history, checkout `fetch-depth: 0` |
 
 `.github/dependabot.yml` covers weekly updates for `npm` (`/whatsapp_gateway`), `pip` (`/`) and `github-actions` (`/`).

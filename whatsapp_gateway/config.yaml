@@ -1,6 +1,6 @@
 name: WhatsApp Gateway
 slug: whatsapp_gateway
-version: "0.1.0"
+version: "0.1.1"
 description: Send WhatsApp messages from Home Assistant via a linked device
 url: https://github.com/cookejames/ha-whatsapp-notifications
 arch: [amd64, aarch64]
