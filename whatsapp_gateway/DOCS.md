@@ -78,6 +78,7 @@ Use whatever hostname your Info page shows.
 
 - The add-on declares **no ports**, so nothing is published on your host, LAN or the internet.
 - The **API** listens on port 8099 on the internal Supervisor network. Only Home Assistant Core's address (re-resolved every 5 minutes) and anything in `trusted_sources` can connect. Other sources get `403`. This check runs before the API key is examined.
+- **Limit of the IP check:** on Home Assistant OS, Core runs with host networking and reaches add-ons from the Supervisor network's gateway address (usually `172.30.32.1`). Every other add-on with `host_network: true` (for example DNS, Matter or MCP add-ons) connects from that same address, so the IP check lets them through too. Only add-ons on the normal internal network (`172.30.33.x`) are refused. For host-network add-ons the API key is the only protection, so use a long random key.
 - Every API route except `/health` requires `Authorization: Bearer <api_key>`.
 - The **Web UI** (ingress, port 8098) only accepts connections from the Supervisor ingress proxy. Home Assistant has already authenticated an admin user at that point, so it needs no key.
 - **Incoming messages are never read or stored.** Only the WhatsApp session and a group list (names, JIDs, member counts) are kept in the add-on's data folder, which is included in Home Assistant backups. Keep backups private: the session lets whoever holds it send as the linked number.

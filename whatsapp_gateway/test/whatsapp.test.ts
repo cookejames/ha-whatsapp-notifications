@@ -1,3 +1,4 @@
+import { proto } from "@whiskeysockets/baileys";
 import { mkdir, mkdtemp, rm, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -143,7 +144,19 @@ describe("socket options and WA version", () => {
       generateHighQualityLinkPreview: false,
     });
     expect(cfg.browser?.[1]).toBe("Chrome");
-    expect(cfg.shouldSyncHistoryMessage?.({} as never)).toBe(false);
+    const T = proto.Message.HistorySyncType;
+    const sync = (syncType: proto.Message.HistorySyncType | undefined) =>
+      cfg.shouldSyncHistoryMessage?.({ syncType } as never);
+    // Small syncs that carry LID mappings and push names are allowed...
+    expect(sync(T.INITIAL_BOOTSTRAP)).toBe(true);
+    expect(sync(T.PUSH_NAME)).toBe(true);
+    expect(sync(T.NON_BLOCKING_DATA)).toBe(true);
+    // ...bulk message history and status sync are not.
+    expect(sync(T.FULL)).toBe(false);
+    expect(sync(T.RECENT)).toBe(false);
+    expect(sync(T.ON_DEMAND)).toBe(false);
+    expect(sync(T.INITIAL_STATUS_V3)).toBe(false);
+    expect(sync(undefined)).toBe(false);
     expect(cfg.cachedGroupMetadata).toBe(params.cachedGroupMetadata);
   });
 

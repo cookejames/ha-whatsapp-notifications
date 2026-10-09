@@ -1,6 +1,6 @@
 {
   "name": "whatsapp-gateway",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "description": "WhatsApp gateway add-on for Home Assistant",
   "license": "MIT",

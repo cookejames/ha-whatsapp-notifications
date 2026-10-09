@@ -42,6 +42,7 @@ HA automation → notify.send_message / whatsapp.send_message
   - **Ingress listener**, port `8098` (`ingress_port`), used only by the Supervisor ingress proxy.
 - **Source-IP allowlist** (checked before auth; failures get `403`):
   - API listener: the address(es) that `homeassistant` resolves to, re-resolved every 5 minutes, plus any entries in `trusted_sources` (IPs or CIDRs), plus loopback (`127.0.0.1`, `::1`) for health checks.
+  - **Known limit:** HA Core uses host networking, so it connects from the Supervisor bridge gateway (usually `172.30.32.1`). Every host-network add-on shares that address and passes the filter. The filter excludes bridge-network add-ons (`172.30.33.x`) only, and the bearer key is the boundary for host-network add-ons. Observed on a real install, where a host-network add-on reached `/status` with the key.
   - Ingress listener: only `172.30.32.2` (the Supervisor ingress proxy), plus loopback.
   - IPv4-mapped IPv6 addresses (`::ffff:a.b.c.d`) are normalised before comparison.
 - **Bearer auth:** every API route except `GET /health` needs `Authorization: Bearer <api_key>`, compared in constant time. Ingress routes don't need the bearer key, because HA has already authenticated an admin user.
@@ -142,7 +143,7 @@ export interface WhatsAppClient {
 - **WA Web version:** `fetchLatestBaileysVersion()`, cached in memory for 6 hours. If the fetch fails, fall back to a pinned constant `FALLBACK_WA_VERSION` with a comment explaining why: WhatsApp rejects stale client versions with HTTP 428.
 - **Socket options:**
   - `markOnlineOnConnect: false`
-  - `syncFullHistory: false`, `shouldSyncHistoryMessage: () => false`
+  - `syncFullHistory: false`; `shouldSyncHistoryMessage` allows only `INITIAL_BOOTSTRAP`, `PUSH_NAME` and `NON_BLOCKING_DATA`. These carry the phone-number/LID mappings Baileys needs. Refusing every type makes Baileys warn about session instability. `FULL`, `RECENT`, `ON_DEMAND` and status sync stay off, and no history or message event is subscribed, so nothing is stored.
   - `browser: Browsers.macOS("Chrome")` or an equivalent realistic tuple
   - `defaultQueryTimeoutMs: 60_000`
   - `logger`: a pino child at `warn` (or `debug` when `log_level` is `debug`)

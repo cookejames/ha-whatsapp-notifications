@@ -4,6 +4,7 @@ import makeWASocket, {
   Browsers,
   DisconnectReason,
   fetchLatestBaileysVersion,
+  proto,
   useMultiFileAuthState,
   type AnyMessageContent,
   type AuthenticationState,
@@ -65,6 +66,20 @@ export interface SocketParams {
 
 export type SocketFactory = (params: SocketParams) => SocketLike;
 
+/**
+ * History-sync types Baileys may process. These small early syncs carry the
+ * phone-number/LID mappings and contact names Baileys needs for stable
+ * sessions. Refusing every type makes Baileys warn about instability. Bulk
+ * message history (FULL, RECENT, ON_DEMAND) and status sync stay off. Nothing
+ * from any sync is stored: this gateway subscribes to no message or history
+ * events.
+ */
+export const SYNCED_HISTORY_TYPES: ReadonlySet<proto.Message.HistorySyncType> = new Set([
+  proto.Message.HistorySyncType.INITIAL_BOOTSTRAP,
+  proto.Message.HistorySyncType.PUSH_NAME,
+  proto.Message.HistorySyncType.NON_BLOCKING_DATA,
+]);
+
 /** Exact socket options from spec §3.5. */
 export function buildSocketConfig(params: SocketParams): Parameters<typeof makeWASocket>[0] {
   return {
@@ -73,7 +88,8 @@ export function buildSocketConfig(params: SocketParams): Parameters<typeof makeW
     browser: Browsers.macOS("Chrome"),
     markOnlineOnConnect: false,
     syncFullHistory: false,
-    shouldSyncHistoryMessage: () => false,
+    shouldSyncHistoryMessage: ({ syncType }) =>
+      syncType != null && SYNCED_HISTORY_TYPES.has(syncType),
     defaultQueryTimeoutMs: 60_000,
     generateHighQualityLinkPreview: false,
     logger: params.logger,
