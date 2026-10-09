@@ -18,7 +18,7 @@ Source of truth for the work breakdown. Spec: [../spec.md](../spec.md). HTTP con
 | [T02](T02-gateway-scaffold.md) | Gateway scaffold, options, client interface, fake client | done | T01 | 2 |
 | [T08](T08-integration-scaffold.md) | Integration scaffold, API client, config flow | done | T01 | 2 |
 | [T12](T12-ci.md) | GitHub Actions CI and Dependabot | done | T01 | 2 |
-| [T03](T03-jid.md) | Target resolution and allowlist (`jid.ts`) | todo | T02 | 3 |
+| [T03](T03-jid.md) | Target resolution and allowlist (`jid.ts`) | done | T02 | 3 |
 | [T04](T04-queue-media.md) | Send queue and media loader | todo | T02 | 3 |
 | [T05](T05-baileys-client.md) | Baileys client and group cache | todo | T02 | 3 |
 | [T09](T09-options-notify.md) | Recipients options flow and notify entities | todo | T08 | 3 |

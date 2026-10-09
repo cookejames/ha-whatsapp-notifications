@@ -1,7 +1,7 @@
 ---
 id: T03
 title: Target resolution and allowlist (jid.ts)
-status: review
+status: done
 depends_on: [T02]
 wave: 3
 ---
