@@ -116,7 +116,15 @@ Processing:
 ```
 When a text message and media both go to one target, `id` is the id of the last message sent.
 
-Error results for `unknown_group` and `ambiguous_group` include `"suggestions": ["Family (120363000000000000@g.us)"]`.
+Error results for `unknown_group` and `ambiguous_group` carry suggestions **inside the error object**:
+```json
+{ "to": "group:Famly", "error": { "code": "unknown_group", "message": "No group named \"Famly\"", "suggestions": ["Family (120363000000000000@g.us)"] } }
+```
+- **`jid` on an error result:** present when the target resolved (e.g. `target_not_allowed`, `send_failed`); omitted when resolution itself failed.
+- **Media URLs:** a `url` that isn't http(s), or can't be parsed, fails validation with `400 invalid_request`. `422 media_fetch_failed` is only for fetch failures.
+- **Empty message:** `message: ""` with no media counts as missing, giving `400 invalid_request`. Unknown body fields are ignored.
+- **Groups refresh cooldown:** `/groups?refresh=true` is rate limited by the route itself (60 s). While the cooldown is active it returns the cached list with `"refreshed": false`.
+- **Extra headers:** `401` responses include `WWW-Authenticate: Bearer`, and `405` responses include `Allow`.
 
 ---
 

@@ -1,7 +1,7 @@
 ---
 id: T06
 title: HTTP API server, IP filter, auth
-status: review
+status: done
 depends_on: [T03, T04]
 wave: 4
 ---
