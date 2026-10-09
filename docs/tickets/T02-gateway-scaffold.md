@@ -58,3 +58,5 @@ Real Baileys logic, HTTP servers.
 - `FakeWhatsAppClient` helpers: `setState`, `setGroups`, `setRefreshResult`, `failNextSend`, `sent[]`, `refreshCount`.
 - `maskJid` shows at most the first 4 and last 3 local-part characters; local parts of 7 or fewer characters are fully masked.
 - Verified on host Node 22.23.3: `npm ci`, `npm run lint`, `npm run typecheck`, `npm test` (30 tests) pass. `docker build --platform linux/amd64 whatsapp_gateway` succeeds; the `--platform` flag is only needed on arm64 hosts, since the default base image is amd64.
+
+- 2026-10-09 (orchestrator): moved to Node 24 LTS. `.nvmrc` is 24, base images are Alpine 3.24 (nodejs 24.18), `engines >=24`, and `@types/node` ^24.

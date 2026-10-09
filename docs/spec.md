@@ -49,7 +49,7 @@ HA automation → notify.send_message / whatsapp.send_message
 ## 3. Add-on: `whatsapp_gateway`
 
 ### 3.1 Runtime
-- TypeScript compiled to JavaScript, run on Node.js 22.
+- TypeScript compiled to JavaScript, run on Node.js 24 (LTS). Python targets 3.14 (required by current Home Assistant).
 - Base image `ghcr.io/home-assistant/{arch}-base` (Alpine) with `nodejs` and `npm`. Only production dependencies go in the final image.
 - Architectures: `amd64`, `aarch64`.
 - Built on the device from the Dockerfile; no prebuilt image registry.
@@ -335,11 +335,11 @@ Triggers: `push` to `main` and `pull_request`. The workflow uses `permissions: c
 | Job | Steps |
 |---|---|
 | `gateway` | setup-node 22 (npm cache keyed on `whatsapp_gateway/package-lock.json`); in `whatsapp_gateway/`: `npm ci`, `npm run lint`, `npm run typecheck`, `npm test` |
-| `integration` | setup-python 3.13; `pip install -r requirements_test.txt`; `ruff check .`; `ruff format --check .`; `pytest` |
+| `integration` | setup-python 3.14; `pip install -r requirements_test.txt`; `ruff check .`; `ruff format --check .`; `pytest` |
 | `hassfest` | `home-assistant/actions/hassfest` |
 | `hacs` | `hacs/action` with `category: integration` |
 | `addon-lint` | `frenck/action-addon-linter` with `path: ./whatsapp_gateway` |
-| `addon-build` | `home-assistant/builder/actions/build-image` matrix (amd64 on `ubuntu-latest`, aarch64 on `ubuntu-24.04-arm`), context `whatsapp_gateway`, `push: false`, `BUILD_FROM=ghcr.io/home-assistant/<arch>-base:3.22` (matches `build.yaml`; Alpine 3.22 ships Node 22). The legacy `--test` builder action is deprecated. |
+| `addon-build` | `home-assistant/builder/actions/build-image` matrix (amd64 on `ubuntu-latest`, aarch64 on `ubuntu-24.04-arm`), context `whatsapp_gateway`, `push: false`, `BUILD_FROM=ghcr.io/home-assistant/<arch>-base:3.24` (matches `build.yaml`; Alpine 3.24 ships Node 24). The legacy `--test` builder action is deprecated. |
 | `secrets` | `gitleaks/gitleaks-action` with checkout `fetch-depth: 0` |
 
 `.github/dependabot.yml` covers weekly updates for `npm` (`/whatsapp_gateway`), `pip` (`/`) and `github-actions` (`/`).

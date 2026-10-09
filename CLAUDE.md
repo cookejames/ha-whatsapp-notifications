@@ -4,7 +4,7 @@ Guidance for Claude Code when working in this repository.
 
 ## What this is
 A public, open-source WhatsApp notification service for Home Assistant. It has two parts that ship from one repo:
-- `whatsapp_gateway/`: a Home Assistant **add-on**. TypeScript on Node 22, using Baileys. It links to WhatsApp as a companion device and exposes an authenticated HTTP API on the Supervisor's internal network, plus an ingress status page.
+- `whatsapp_gateway/`: a Home Assistant **add-on**. TypeScript on Node 24 LTS, using Baileys. It links to WhatsApp as a companion device and exposes an authenticated HTTP API on the Supervisor's internal network, plus an ingress status page.
 - `custom_components/whatsapp/`: a thin Home Assistant **custom integration** in Python, installed via HACS. It provides a config flow, notify entities per recipient, the `whatsapp.send_message` and `whatsapp.list_groups` services, and a connectivity binary sensor.
 
 ## Source of truth
@@ -26,7 +26,7 @@ Read the relevant spec sections and your ticket before writing code. When the sp
 Commands are filled in as the tickets land. The expected commands are:
 - Node comes from nvm and is pinned in the root `.nvmrc`. Run `. "$NVM_DIR/nvm.sh" && nvm use` first.
 - Gateway (run in `whatsapp_gateway/`): `npm ci`, `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`
-- Integration (repo root): `pip install -r requirements_test.txt`, `ruff check .`, `ruff format --check .`, `pytest`
+- Integration (repo root, always inside a venv on Python ≥ 3.14): `python3 -m venv .venv && . .venv/bin/activate`, then `pip install -r requirements_test.txt`, `ruff check .`, `ruff format --check .`, `pytest`
 - Smoke test: `scripts/smoke.sh` (needs Docker; runs the add-on with `GATEWAY_FAKE=1`)
 
 ## CI
