@@ -1,7 +1,7 @@
 ---
 id: T08
 title: Integration scaffold, API client, config flow
-status: todo
+status: review
 depends_on: [T01]
 wave: 2
 ---
@@ -47,3 +47,15 @@ API client against `aioclient_mock`, covering every route and error class. Confi
 Recipients, notify, services and sensor behaviour.
 
 ## Questions / notes
+
+- The spec leaves the shape of `groups()`/`send()` return values open. `groups(refresh=False)` returns the `groups` list; `send()` returns the `results` list. HTTP errors, including `503 not_connected`, raise `GatewayError(code, message)`.
+- The coordinator raises `ConfigEntryAuthFailed` on 401/403, which starts the reauth flow. Other gateway errors give `UpdateFailed` (the entry goes to setup retry).
+- hassfest rejects `<...>` in strings (HTML check), so the `target` field description says `group:Name` rather than `group:<name>`.
+
+## Implementation notes
+- Typed alias `WhatsAppConfigEntry = ConfigEntry[WhatsAppRuntimeData]` and the dataclass live in `__init__.py`; `runtime_data` holds `client` and `coordinator`. Later tickets import them with `from . import WhatsAppConfigEntry`.
+- Exceptions: `GatewayApiError` is a common base for `GatewayAuthError`, `GatewayConnectionError` and `GatewayError(code, message)`. Non-JSON or unexpected 2xx bodies raise `GatewayError("invalid_response", ...)`; non-envelope error bodies raise `GatewayError("unknown", "HTTP <status>")`.
+- Unique id is the lowercased URL without trailing slash. The stored URL keeps its case but loses the trailing slash.
+- `strings.json` and `translations/en.json` are identical. Beyond the spec's exception keys (`not_connected`, `target_error`, `path_not_allowed`, `file_too_large`), extra keys were added for T10/T11 so they need not edit translations: `all_targets_failed`, `file_read_error`, `message_required`, `multiple_media`, `entity_not_found`, `config_entry_not_found`, `multiple_config_entries`, `gateway_error`, `cannot_connect`, `invalid_auth`. Options flow keys: steps `init` (menu: `add_person`, `add_group`, `remove`), `add_person` (`name`, `phone`), `add_group` (`group`, `name`), `remove` (`recipients`); error `invalid_phone`; abort `no_groups`.
+- `requirements_test.txt` pins `pytest-homeassistant-custom-component==0.13.371` and `ruff==0.15.0`; ruff targets py314. `pyproject.toml` also enables coverage reporting for `custom_components.whatsapp`.
+- Verified on host Python 3.14.7 (venv): `ruff check .`, `ruff format --check .`, `pytest` (23 passed, 100% coverage). hassfest (Docker image) reported `Invalid integrations: 0`.
