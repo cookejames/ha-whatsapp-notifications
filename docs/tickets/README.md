@@ -15,7 +15,7 @@ Source of truth for the work breakdown. Spec: [../spec.md](../spec.md). HTTP con
 | ID | Title | Status | Depends on | Wave |
 |---|---|---|---|---|
 | [T01](T01-repo-scaffold.md) | Repo scaffold | done | none | 1 |
-| [T02](T02-gateway-scaffold.md) | Gateway scaffold, options, client interface, fake client | todo | T01 | 2 |
+| [T02](T02-gateway-scaffold.md) | Gateway scaffold, options, client interface, fake client | done | T01 | 2 |
 | [T08](T08-integration-scaffold.md) | Integration scaffold, API client, config flow | todo | T01 | 2 |
 | [T12](T12-ci.md) | GitHub Actions CI and Dependabot | done | T01 | 2 |
 | [T03](T03-jid.md) | Target resolution and allowlist (`jid.ts`) | todo | T02 | 3 |

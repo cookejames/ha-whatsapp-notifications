@@ -100,7 +100,7 @@ jobs:
           cache-gha: "false"
           container-registry-password: ${{ github.token }}
           build-args: |
-            BUILD_FROM=ghcr.io/home-assistant/${{ matrix.arch }}-base:latest
+            BUILD_FROM=ghcr.io/home-assistant/${{ matrix.arch }}-base:3.22
 
   secrets:
     name: Secret scan

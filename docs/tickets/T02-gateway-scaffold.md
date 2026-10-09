@@ -1,7 +1,7 @@
 ---
 id: T02
 title: Gateway scaffold, options, client interface, fake client
-status: review
+status: done
 depends_on: [T01]
 wave: 2
 ---
