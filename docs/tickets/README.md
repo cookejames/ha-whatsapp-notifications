@@ -25,7 +25,7 @@ Source of truth for the work breakdown. Spec: [../spec.md](../spec.md). HTTP con
 | [T10](T10-services.md) | `send_message` and `list_groups` services | done | T08 | 3 |
 | [T11](T11-binary-sensor.md) | Connected binary sensor | done | T08 | 3 |
 | [T06](T06-http-api.md) | HTTP API server, IP filter, auth | todo | T03, T04 | 4 |
-| [T07](T07-ingress.md) | Ingress status page | todo | T05, T06 | 4 |
+| [T07](T07-ingress.md) | Ingress status page | done | T05, T06 | 4 |
 | [T13](T13-docs.md) | User docs: README, DOCS.md, CHANGELOG | todo | T05–T11 | 5 |
 | [T14](T14-wire-up.md) | Wire-up, Docker build, smoke test | todo | T05, T06, T07 | 5 |
 | [T15](T15-release-hygiene.md) | Release hygiene and CLAUDE.md refresh | todo | all | 5 |

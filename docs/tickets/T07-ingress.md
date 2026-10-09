@@ -1,7 +1,7 @@
 ---
 id: T07
 title: Ingress status page
-status: review
+status: done
 depends_on: [T05, T06]
 wave: 4
 ---
