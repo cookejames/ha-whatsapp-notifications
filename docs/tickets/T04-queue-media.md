@@ -1,7 +1,7 @@
 ---
 id: T04
 title: Send queue and media loader
-status: todo
+status: review
 depends_on: [T02]
 wave: 3
 ---
@@ -32,3 +32,17 @@ Rate limit window, order, queue full, deadline, a failing send, stop; for media:
 HTTP routing, Baileys.
 
 ## Questions / notes
+- `QueueError` (in `queue.ts`) carries `code`: `queue_full`, `timeout` or `send_failed`. T06 should map it to the per-target result. `NotConnectedError` and any other client error also become `send_failed` with the client's message (conservative reading).
+- `maxLength` counts jobs waiting in the queue; the job currently being sent no longer counts.
+- A job waiting on the rate limit is rejected with `timeout` at its deadline (the wait sleep is capped at the deadline). A job queued behind a slow in-flight `client.send` is only checked once that send returns.
+- `stop()` is synchronous, rejects pending jobs with `send_failed` ("Send queue stopped") and refuses new enqueues. A send already in flight is left to finish.
+- `perMinute` is floored and clamped to at least 1.
+- Media: redirects are followed manually (max 3, each hop re-checked for http/https). A bad scheme or invalid URL gives `media_fetch_failed` (the spec has no separate code for it). A too-large `Content-Length` is rejected before streaming. For images the Content-Type is used if it is one of the four allowed types, otherwise the bytes are sniffed. For documents the mimetype is `spec.mimetype`, then the header, then `application/octet-stream`.
+- `loadMedia` takes `{url?, base64?, filename?, mimetype?}`; T06 should pass `maxBytes` = 16 MiB and `timeoutMs` = 15000.
+- Vitest's text coverage table omits fully covered files, so `queue.ts` (100% lines) does not appear in it.
+
+## Implementation notes
+- `src/queue.ts`: serial worker loop with injectable `now`/`random`/`sleep`; the rate limit uses send-start timestamps in a rolling 60 s window; jitter sleep only between sends.
+- `src/media.ts`: `loadMedia`, `MediaError`, plus exported `sniffImageType` and `sanitizeFilename`.
+- Tests use a virtual clock and injected sleep (queue) and a mocked `fetch` with fake timers (media). No real network or sleeping.
+- Lint, typecheck and tests pass; line coverage: queue.ts 100%, media.ts 100%.
