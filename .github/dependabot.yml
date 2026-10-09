@@ -4,6 +4,13 @@ updates:
     directory: /whatsapp_gateway
     schedule:
       interval: weekly
+    ignore:
+      # Types track the Node 24 LTS runtime (.nvmrc); bump deliberately with Node.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      # Blocked on typescript-eslint support; a major TS bump is a deliberate migration.
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: pip
     directory: /
     schedule:
