@@ -178,5 +178,12 @@
         }
       }
     }
+  },
+  "entity": {
+    "binary_sensor": {
+      "connected": {
+        "name": "Connected"
+      }
+    }
   }
 }

@@ -1,7 +1,7 @@
 ---
 id: T11
 title: Connected binary sensor
-status: review
+status: done
 depends_on: [T08]
 wave: 3
 ---
@@ -33,3 +33,5 @@ Everything else.
 - `binary_sensor.py`: `WhatsAppConnectedSensor(CoordinatorEntity[WhatsAppStatusCoordinator], BinarySensorEntity)`, `unique_id` `<entry_id>_connected`, device info `{(DOMAIN, entry_id)}`, name "WhatsApp Gateway", `DeviceEntryType.SERVICE`, matching T09. `is_on` reads `connected`. Unavailability comes from `CoordinatorEntity` when the last update failed. The module-level helper `mask_jid` is unit-tested.
 - Tests cover on (with attributes, masking and device), off, unavailable and recovery, and masking edge cases.
 - Verified on Python 3.14.7: `ruff check .`, `ruff format --check .`, `pytest` (27 passed, `binary_sensor.py` 100% coverage).
+
+- Orchestrator follow-up: added `entity.binary_sensor.connected` to the strings and switched the sensor to `_attr_translation_key`.

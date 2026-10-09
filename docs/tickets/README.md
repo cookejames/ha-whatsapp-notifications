@@ -23,7 +23,7 @@ Source of truth for the work breakdown. Spec: [../spec.md](../spec.md). HTTP con
 | [T05](T05-baileys-client.md) | Baileys client and group cache | todo | T02 | 3 |
 | [T09](T09-options-notify.md) | Recipients options flow and notify entities | todo | T08 | 3 |
 | [T10](T10-services.md) | `send_message` and `list_groups` services | todo | T08 | 3 |
-| [T11](T11-binary-sensor.md) | Connected binary sensor | todo | T08 | 3 |
+| [T11](T11-binary-sensor.md) | Connected binary sensor | done | T08 | 3 |
 | [T06](T06-http-api.md) | HTTP API server, IP filter, auth | todo | T03, T04 | 4 |
 | [T07](T07-ingress.md) | Ingress status page | todo | T05, T06 | 4 |
 | [T13](T13-docs.md) | User docs: README, DOCS.md, CHANGELOG | todo | T05–T11 | 5 |

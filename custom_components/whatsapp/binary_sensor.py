@@ -44,7 +44,7 @@ class WhatsAppConnectedSensor(
     """On when WhatsApp is open on the gateway."""
 
     _attr_has_entity_name = True
-    _attr_name = "Connected"
+    _attr_translation_key = "connected"
     _attr_device_class = BinarySensorDeviceClass.CONNECTIVITY
 
     def __init__(
