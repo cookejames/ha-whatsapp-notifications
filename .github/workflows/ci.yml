@@ -102,6 +102,33 @@ jobs:
           build-args: |
             BUILD_FROM=ghcr.io/home-assistant/${{ matrix.arch }}-base:3.24
 
+  # Supervisor runs the add-on confined by apparmor.txt. Plain `docker run` does
+  # not, so load the profile on the runner (Ubuntu has AppArmor enabled) and run
+  # the smoke test inside it, failing on any denial.
+  addon-apparmor:
+    name: Add-on under AppArmor
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Load AppArmor profile
+        run: |
+          sudo aa-status --enabled
+          sudo apparmor_parser -r -W whatsapp_gateway/apparmor.txt
+          sudo aa-status | grep -F whatsapp_gateway
+      - name: Smoke test under the profile
+        env:
+          SMOKE_DOCKER_ARGS: --security-opt apparmor=whatsapp_gateway
+        run: sh scripts/smoke.sh
+      - name: Check for AppArmor denials
+        if: always()
+        run: |
+          denials=$(sudo dmesg | grep -F 'apparmor="DENIED"' | grep -F 'profile="whatsapp_gateway' || true)
+          if [ -n "$denials" ]; then
+            echo "$denials"
+            exit 1
+          fi
+          echo "No AppArmor denials"
+
   secrets:
     name: Secret scan
     runs-on: ubuntu-latest

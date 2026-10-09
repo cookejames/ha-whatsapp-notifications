@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1
+
+- **Fix:** the add-on failed to start on Home Assistant OS with `/bin/sh: can't open '/init': Permission denied`. The AppArmor profile now allows s6-overlay's start-up (`/init`, `/package`, `/command`, `/run`) plus the capabilities, signals and unix sockets it uses.
+- **CI:** a new job runs the add-on under its AppArmor profile and fails on any denial.
+
 ## 0.1.0
 
 Initial release.

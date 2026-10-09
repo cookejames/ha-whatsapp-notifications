@@ -66,7 +66,10 @@ JSON
 echo "Building image for $PLATFORM"
 docker build --platform "$PLATFORM" --build-arg "BUILD_FROM=$BASE_IMAGE" -t "$IMAGE" "$ROOT/whatsapp_gateway"
 
-docker run -d --name "$NAME" --platform "$PLATFORM" \
+# SMOKE_DOCKER_ARGS adds extra `docker run` flags, e.g. CI runs the container under
+# the add-on's AppArmor profile with `--security-opt apparmor=whatsapp_gateway`.
+# shellcheck disable=SC2086
+docker run -d --name "$NAME" --platform "$PLATFORM" ${SMOKE_DOCKER_ARGS:-} \
   -e GATEWAY_FAKE=1 \
   -v "$TMP/options.json:/data/options.json:ro" \
   -p "127.0.0.1:$PORT:8099" \
