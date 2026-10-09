@@ -1,7 +1,7 @@
 ---
 id: T03
 title: Target resolution and allowlist (jid.ts)
-status: todo
+status: review
 depends_on: [T02]
 wave: 3
 ---
@@ -32,3 +32,12 @@ spec §3.7; api.md per-target error codes
 The network, the queue, HTTP.
 
 ## Questions / notes
+- `ErrorCode` is referenced by spec §3.7 but not defined in any shared module yet. `jid.ts` exports a local `ErrorCode` union of the five per-target codes it produces (`invalid_target`, `unknown_group`, `ambiguous_group`, `not_a_member`, `target_not_allowed`). T06 may want a shared definition; it can widen or replace this one.
+
+## Implementation notes
+- `resolveTarget`, `isAllowed`, `normalisePhone` and the `ResolveResult` / `ErrorCode` types are exported from `whatsapp_gateway/src/jid.ts`. Pure functions, no I/O, local Levenshtein.
+- Rules run in spec order. Matching is case-insensitive; suffix-form JIDs are returned lower-cased.
+- `@c.us` is handled with the other JID suffixes (local part must be digits, any length) rather than through the 7-15 digit phone check. Conservative reading of rules 3 and 4.
+- Suggestions: substring matches (either direction) first, then by Levenshtein distance, max 3, member groups only. An empty `group:` name gives `unknown_group` with no substring suggestions.
+- `isAllowed`: an empty list allows all. A group JID entry matches literally without needing the group in the cache. Entries that do not resolve (invalid, unknown group, non-member) never match, so a non-empty list of bad entries denies everything. The caller maps a false result to `target_not_allowed`.
+- Verification: lint, typecheck and tests pass; `jid.ts` line coverage 100%.
