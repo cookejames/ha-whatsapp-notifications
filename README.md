@@ -52,7 +52,7 @@ If you left the pairing phone number empty, the page shows a QR code instead. Sc
 1. In HACS, open the three-dot menu, choose **Custom repositories**, and add `https://github.com/cookejames/ha-whatsapp-notifications` with category **Integration**.
 2. Search for **WhatsApp (Gateway)** in HACS, download it, and restart Home Assistant.
 3. Go to **Settings > Devices & services > Add integration**, choose **WhatsApp (Gateway)**, and enter:
-   - **Gateway URL:** usually `http://50eb1446-whatsapp-gateway:8099`. Confirm the hostname on the add-on's **Info** page. The form pre-fills `http://local-whatsapp-gateway:8099`, which only fits a locally installed add-on, so change it.
+   - **Gateway URL:** usually `http://50eb1446-whatsapp-gateway:8099`. Confirm the hostname on the add-on's **Info** page. The form pre-fills this value. Change it only if the Info page shows a different hostname.
    - **API key:** the key you set in the add-on configuration.
 
 If you change the API key later, Home Assistant asks you to re-authenticate the integration with the new one.

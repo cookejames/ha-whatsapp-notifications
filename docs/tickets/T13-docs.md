@@ -1,7 +1,7 @@
 ---
 id: T13
 title: "User docs: README, DOCS.md, CHANGELOG"
-status: review
+status: done
 depends_on: [T05, T06, T07, T09, T10, T11]
 wave: 5
 ---
@@ -39,3 +39,5 @@ Code changes.
 - `whatsapp_gateway/DOCS.md`: every option from `config.yaml`, pairing, connection states, reset pairing, hostname, network exposure, limits, error codes.
 - Both changelogs: `0.1.0`, Baileys `7.0.0-rc14` (from `package.json`).
 - All 11 YAML snippets parsed with Ruby `YAML.safe_load`. Only spec §1 placeholders are used.
+
+- Orchestrator follow-up: `DEFAULT_URL` is now `http://50eb1446-whatsapp-gateway:8099` (commit 2af9ecd), and the README wording is updated to match.
