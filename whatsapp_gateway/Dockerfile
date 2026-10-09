@@ -18,4 +18,6 @@ ENV NODE_ENV=production
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev && npm cache clean --force
 COPY --from=build /app/dist ./dist
-CMD ["node", "dist/index.js"]
+# s6-overlay's /init clears the container environment for CMD; with-contenv restores it
+# (needed for DATA_DIR, OPTIONS_PATH and GATEWAY_FAKE).
+CMD ["with-contenv", "node", "dist/index.js"]
