@@ -1,7 +1,7 @@
 ---
 id: T05
 title: Baileys client and group cache
-status: review
+status: done
 depends_on: [T02]
 wave: 3
 ---

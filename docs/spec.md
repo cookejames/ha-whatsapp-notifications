@@ -148,6 +148,11 @@ export interface WhatsAppClient {
   - `logger`: a pino child at `warn` (or `debug` when `log_level` is `debug`)
   - `cachedGroupMetadata: (jid) => groups.metadata(jid)`
   - `generateHighQualityLinkPreview: false`
+- **Baileys v7 notes** (confirmed against 7.0.0-rc14):
+  - `fetchLatestBaileysVersion()` never throws. On failure it returns `{version, isLatest: false, error}`, so a returned `error` counts as a failure and `FALLBACK_WA_VERSION` is used. Review the fallback on every Baileys bump.
+  - `group-participants.update` carries `participants` as objects (`{id, lid?, phoneNumber?}`), not strings. Removal detection compares the linked account's `user.id` and `user.lid` against all three fields, with `:device` suffixes stripped.
+  - Groups missing from a later full fetch are kept with `isMember: false` rather than deleted, so their names still resolve.
+  - A pairing-code request that fails or times out ends the socket and reconnects using the pairing backoff.
 - **Pairing:**
   - If `pairing_phone_number` is set and the creds aren't registered, call `sock.requestPairingCode(number)` about 3 seconds after creating the socket, without waiting for a QR event. Race it against a 20-second timeout and the socket closing.
   - On success, set the state to `pairing` with `pairing.code`, and log the code at `info`.
