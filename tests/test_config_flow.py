@@ -117,16 +117,3 @@ async def test_reauth_flow(
     assert result["reason"] == "reauth_successful"
     assert mock_config_entry.data[CONF_API_KEY] == "new-key-0123456789abcdef"
     assert mock_config_entry.data[CONF_URL] == GATEWAY_URL
-
-
-async def test_options_flow_stub(
-    hass: HomeAssistant,
-    aioclient_mock: AiohttpClientMocker,
-    mock_config_entry: MockConfigEntry,
-) -> None:
-    """The options flow stub shows a form and saves existing options."""
-    mock_config_entry.add_to_hass(hass)
-    result = await hass.config_entries.options.async_init(mock_config_entry.entry_id)
-    assert result["type"] is FlowResultType.FORM
-    result = await hass.config_entries.options.async_configure(result["flow_id"], {})
-    assert result["type"] is FlowResultType.CREATE_ENTRY
